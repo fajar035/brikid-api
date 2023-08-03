@@ -2,8 +2,8 @@ const db = require('../configs/db');
 const mysql = require('mysql2');
 
 const getAllUsers = (query) => {
-  const { search, sort, order, page, limit } = query;
   return new Promise((resolve, reject) => {
+    const { search, sort, order, page, limit } = query;
     let sqlGetAll =
       'SELECT id, name, email, photo, createdAt, updatedAt FROM users';
     const sqlCount = `SELECT COUNT(*) as "count" from users`;
@@ -95,10 +95,11 @@ const getByIdUser = (id) => {
 };
 
 const updateUser = (body, bodyOld, userInfo) => {
-  console.log(bodyOld);
   return new Promise((resolve, reject) => {
     const { id } = userInfo;
     let { name, email, photoUser } = body;
+
+    const { nameOld, emailOld, photoOld } = bodyOld;
     const updatedAt = new Date(
       new Date(new Date(new Date()).toISOString()).getTime() -
         new Date().getTimezoneOffset() * 60000,
@@ -110,18 +111,10 @@ const updateUser = (body, bodyOld, userInfo) => {
     const sql = 'UPDATE users SET ? WHERE id = ?';
     const sqlCheckEmail = 'SELECT email FROM users WHERE email = ?';
 
-    if (!name) {
-      name = bodyOld.nameOld;
-    }
-    if (!email) {
-      email = bodyOld.emailOld;
-    }
-    if (!photoUser) {
-      photoUser = bodyOld.photoOld;
-    }
-
     const newBody = {
-      ...body,
+      name: name ? name : nameOld,
+      email: email ? email : emailOld,
+      photo: photoUser ? photoUser : photoOld,
       updatedAt,
     };
     db.query(sqlCheckEmail, [email], (err, result) => {
@@ -143,9 +136,9 @@ const updateUser = (body, bodyOld, userInfo) => {
             message: 'Successfuly changed data',
             result: {
               id,
-              name,
-              email,
-              photo: photoUser,
+              name: name ? name : nameOld,
+              email: email ? email : emailOld,
+              photo: photoUser ? photoUser : photoOld,
             },
           },
         });

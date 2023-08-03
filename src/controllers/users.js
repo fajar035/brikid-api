@@ -36,7 +36,7 @@ const updateUser = (req, res) => {
   } else {
     body = {
       ...body,
-      photo: urlPhoto,
+      photoUser: urlPhoto,
     };
   }
 
