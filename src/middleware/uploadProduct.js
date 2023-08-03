@@ -12,7 +12,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'brik.id/users',
+    folder: 'brik.id/products',
     format: async (req, file) => 'jpg', // supports promises as well
     public_id: (req, file) => {
       const { email } = req.userInfo;
@@ -44,7 +44,7 @@ const multerOptions = {
 };
 
 const { limits, fileFilter } = multerOptions;
-const upload = multer({ storage, limits, fileFilter }).single('photoUser');
+const upload = multer({ storage, limits, fileFilter }).single('image');
 
 const multerHandler = (req, res, next) => {
   upload(req, res, (err) => {

@@ -3,7 +3,7 @@ const usersRouter = express.Router();
 const usersController = require('../controllers/users');
 const { checkToken } = require('../middleware/authorize');
 const upload = require('../middleware/upload');
-const getUsers = require('../middleware/getUser');
+const getData = require('../middleware/getData');
 
 usersRouter.get('/', checkToken, usersController.getAllUsers);
 usersRouter.get('/:id', checkToken, usersController.getByIdUser);
@@ -11,7 +11,7 @@ usersRouter.patch(
   '/update',
   checkToken,
   upload,
-  getUsers.getUser,
+  getData.user,
   usersController.updateUser,
 );
 
