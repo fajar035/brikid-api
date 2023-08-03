@@ -13,6 +13,7 @@ I have deployed this project in vercel, and the database is also hosted. And I h
 - Pagination, Search, Sorting
 - Upload Photo (profile & products)
 - Private route & Public route
+- Validate email & Upload image
 
 ## Technologies
 
