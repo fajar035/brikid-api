@@ -7,9 +7,10 @@ I have deployed this project in vercel, and the database is also hosted. And I h
 ## Features
 
 - Login, register account
+- Secure your password
 - Edit Profile
 - add, edit, views, delete Products & Detail Products
-- Secure your password
+- Pagination, Search, Sorting
 - Upload Photo (profile & products)
 - Private route & Public route
 
