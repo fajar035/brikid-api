@@ -5,7 +5,7 @@ const getAllProducts = (query) => {
   return new Promise((resolve, reject) => {
     const { search, sort, order, page, limit } = query;
     let sqlGetAll =
-      'SELECT products.id, category.id as categoryId ,category.name as categoryName ,products.name, products.description, products.sku, products.weight, products.height, products.width, products.length, products.image, products.price FROM brik_id.products JOIN category ON products.id_category = category.id';
+      'SELECT products.id as id, category.id as categoryId ,category.name as categoryName ,products.name as name, products.description as description, products.sku as sku, products.weight as weight, products.height as height, products.width as width, products.length as length, products.image as image, products.price as price FROM products JOIN category ON products.id_category = category.id';
     const sqlCount = `SELECT COUNT(*) as "count" from products`;
     const statement = [];
 
@@ -78,7 +78,7 @@ const getAllProducts = (query) => {
 const getByIdProduct = (id) => {
   return new Promise((resolve, reject) => {
     const sql =
-      'SELECT products.id, category.id as categoryId ,category.name as categoryName ,products.name, products.description, products.sku, products.weight, products.height, products.width, products.length, products.image, products.price FROM brik_id.products JOIN category ON products.id_category = category.id WHERE products.id = ?';
+      'SELECT products.id as id, category.id as categoryId ,category.name as categoryName ,products.name as name, products.description as description, products.sku as sku, products.weight as weight, products.height as height, products.width as width, products.length as length, products.image as image, products.price as price FROM products JOIN category ON products.id_category = category.id WHERE products.id = ?';
 
     db.query(sql, id, (err, result) => {
       if (err) return reject({ status: 500, err: { status: 500, err } });
@@ -147,7 +147,6 @@ const updateProduct = (body, id) => {
     const {
       name,
       description,
-      sku,
       weight,
       height,
       width,
