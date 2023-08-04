@@ -27,7 +27,7 @@ I have deployed this project in vercel, and the database is also hosted. And I h
 
 ## Usage/Examples
 
-- Run your postman, then login or register
+- Run your postman from documentation, then login or register
 - Copy the token to the TOKEN variable
 - Good luck guys 👻
 
