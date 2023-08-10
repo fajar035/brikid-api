@@ -5,12 +5,15 @@ const { sku } = require('../helpers/generateSku');
 const getAllProducts = (req, res) => {
   const { query } = req;
   let keyword = `%%`;
+  let keywordCategory = `%%`;
   if (query.search) keyword = `'%${query.search}%'`;
+  if (query.category) keywordCategory = `'%${query.category}%'`;
   const newQuery = {
     ...query,
     search: keyword,
     page: parseInt(query.page),
     limit: parseInt(query.limit),
+    category: keywordCategory,
   };
 
   productsModel

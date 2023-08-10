@@ -3,15 +3,25 @@ const mysql = require('mysql2');
 
 const getAllProducts = (query) => {
   return new Promise((resolve, reject) => {
-    const { search, sort, order, page, limit } = query;
+    const { search, sort, order, page, limit, category } = query;
     let sqlGetAll =
       'SELECT products.id as id, category.id as categoryId ,category.name as categoryName ,products.name as name, products.description as description, products.sku as sku, products.weight as weight, products.height as height, products.width as width, products.length as length, products.image as image, products.price as price FROM products JOIN category ON products.id_category = category.id';
     const sqlCount = `SELECT COUNT(*) as "count" from products`;
     const statement = [];
 
-    if (search.length !== 2) {
+    if (search.length !== 2 && category.length === 2) {
       sqlGetAll += ' WHERE products.name LIKE ?';
       statement.push(mysql.raw(search));
+    }
+
+    if (search.length === 2 && category.length !== 2) {
+      sqlGetAll += ' WHERE category.name LIKE ?';
+      statement.push(mysql.raw(category));
+    }
+
+    if (search.length !== 2 && category.length !== 2) {
+      sqlGetAll += ` WHERE products.name LIKE ? OR category.name LIKE ?`;
+      statement.push(mysql.raw(search), mysql.raw(category));
     }
 
     if (order && sort) {
