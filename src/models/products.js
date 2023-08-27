@@ -166,8 +166,7 @@ const updateProduct = (body, id) => {
       category,
     } = body;
 
-    const sqlGetProduct = `SELECT products.id, category.id as categoryId ,category.name as categoryName ,products.name, products.description, products.sku, products.weight, products.height, products.width, products.length, products.image, products.price, products.createdAt, 
-    products.updatedAt FROM brik_id.products JOIN category ON products.id_category = category.id WHERE products.id = ?`;
+    const sqlGetProduct = `SELECT products.id as id, category.id as categoryId ,category.name as categoryName ,products.name as name, products.description as description, products.sku as sku, products.weight as weight, products.height as height, products.width as width, products.length as length, products.image as image, products.price as price FROM products JOIN category ON products.id_category = category.id WHERE products.id = ?`;
     const sqlUpdateProduct = 'UPDATE products SET ? WHERE products.id = ?';
     const updatedAt = new Date(
       new Date(new Date(new Date()).toISOString()).getTime() -
@@ -178,6 +177,14 @@ const updateProduct = (body, id) => {
       .replace('T', ' ');
 
     db.query(sqlGetProduct, [id], (err, result) => {
+      if (err)
+        return reject({
+          status: 500,
+          err: {
+            status: 500,
+            err,
+          },
+        });
       const product = result[0];
 
       const newBody = {
