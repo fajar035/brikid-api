@@ -6,8 +6,9 @@ const getAllProducts = (query) => {
     const { search, sort, order, page, limit, category } = query;
     let sqlGetAll =
       'SELECT products.id as id, category.id as categoryId ,category.name as categoryName ,products.name as name, products.description as description, products.sku as sku, products.weight as weight, products.height as height, products.width as width, products.length as length, products.image as image, products.price as price FROM products JOIN category ON products.id_category = category.id';
-    const sqlCount = `SELECT COUNT(*) as "count" from products`;
+    let sqlCount = `SELECT COUNT(*) as "count" from products JOIN category ON products.id_category = category.id`;
     const statement = [];
+    const statementCount = [];
 
     if (search.length !== 2 && category.length === 2) {
       sqlGetAll += ' WHERE products.name LIKE ?';
@@ -16,7 +17,10 @@ const getAllProducts = (query) => {
 
     if (search.length === 2 && category.length !== 2) {
       sqlGetAll += ' WHERE category.name LIKE ?';
+      sqlCount += ` WHERE category.name = ?`;
       statement.push(mysql.raw(category));
+      const categoryCount = category.replace(/%/g, '');
+      statementCount.push(mysql.raw(categoryCount));
     }
 
     if (search.length !== 2 && category.length !== 2) {
@@ -29,10 +33,11 @@ const getAllProducts = (query) => {
       statement.push(mysql.raw(order), mysql.raw(sort));
     }
 
-    db.query(sqlCount, (err, result) => {
+    db.query(sqlCount, statementCount, (err, result) => {
       if (err) return reject({ status: 500, err: { status: 500, err } });
 
       const count = result[0].count;
+      console.log('COUNT : ', result);
       const totalPage = Math.ceil(count / limit);
 
       if (page && limit) {
@@ -115,7 +120,7 @@ const getByIdProduct = (id) => {
 
 const createProduct = (body) => {
   return new Promise((resolve, reject) => {
-    const {
+    let {
       name,
       description,
       sku,
@@ -147,7 +152,11 @@ const createProduct = (body) => {
 
     db.query(sql, statement, (err, result) => {
       if (err) return reject({ status: 500, err: { status: 500, err } });
-      return resolve({ status: 201, result: { status: 201, result: body } });
+
+      return resolve({
+        status: 201,
+        result: { status: 201, result: { ...body, id: result.insertId } },
+      });
     });
   });
 };
